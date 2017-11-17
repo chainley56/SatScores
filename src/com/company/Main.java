@@ -41,6 +41,7 @@ public class Main {
                 int math = 0;
                 int reading = 0;
                 int writing = 0;
+                double percent = 0;
                 if (scanner3.hasNextInt()){
                     math = scanner3.nextInt();
                 }
@@ -50,18 +51,28 @@ public class Main {
                 if (scanner3.hasNextInt()) {
                     writing = scanner3.nextInt();
                 }
-                schools[i] = new School(name, math, reading, writing);
+                if (scanner3.hasNext()) {
+                    String perc = scanner3.next();
+                    if (perc.length() != 0) {
+                        percent = Double.valueOf(perc.substring(0, (perc.length()-1)));
+                    }
+                }
+                schools[i] = new School(name, math, reading, writing, percent);
                // System.out.println(math);
             }
 
         }
         for (int i= 0; i<schools.length; i++){
             if (schools[i] != null){
-                //System.out.println(schools[i].name + ", " + schools[i].getAverage());;
+                System.out.println(schools[i].name + ", " + schools[i].getAverage());;
 
             }
         }
-        System.out.println(NYAverage(schools));
+        System.out.println("NY Average = " +  NYAverage(schools));
+        sortSchools(schools);
+        System.out.println("#1: " + schools[0].name);
+        System.out.println("#2: " + schools[1].name);
+        System.out.println("#3: " + schools[2].name);
     }
     public static int NYAverage(School[]schools){
         int count= 0;
@@ -77,5 +88,35 @@ public class Main {
         }
         return sum/count;
 
+    }
+    public static void sortSchools(School[] schools) {
+        boolean continueSort = true;
+        while (continueSort) {
+            continueSort = false;
+            for (int i=0; i<schools.length-1; i++) {
+                boolean doSwap = false;
+                if (schools[i] != null && schools[i+1] != null) {
+                    if (schools[i+1].getAverage()==schools[i].getAverage()&&schools[i+1].percentTested>schools[i].percentTested) {
+                        doSwap = true;
+                        continueSort = true;
+                    } else if (schools[i+1].getAverage()>schools[i].getAverage()) {
+                        doSwap = true;
+                        continueSort = true;
+                    }
+                } else if (schools[i+1] != null) {
+                    doSwap = true;
+                    continueSort = true;
+                }
+                if (doSwap) {
+                    swap(schools, i, i+1);
+                }
+            }
+        }
+    }
+
+    public static void swap(School[] schools, int indx, int indx2) {
+        School temp = schools[indx];
+        schools[indx] = schools[indx2];
+        schools[indx2] = temp;
     }
 }
